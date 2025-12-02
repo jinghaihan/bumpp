@@ -1,0 +1,73 @@
+[project]
+name = "uvbump"
+version = "0.0.0"
+description = ""
+authors = [{ name = "jinghaihan" }]
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = []
+dependencies = [
+  "click>=8.3.1",
+  "coloredstrings>=3.2.0",
+  "questionary>=2.1.1",
+  "semver>=3.0.4",
+  "tomlkit>=0.13.3",
+]
+
+[project.urls]
+Repository = "https://github.com/jinghaihan/uvbump"
+Homepage = "https://github.com/jinghaihan/uvbump#readme"
+Bugs = "https://github.com/jinghaihan/uvbump/issues"
+
+[project.scripts]
+uvbump = "uvbump.cli:cli"
+
+[dependency-groups]
+typing = ["mypy"]
+scripts = ["taskipy"]
+lint = ["ruff"]
+test = [
+  "pytest",
+  "pytest-cov",
+  "pytest-asyncio",
+  "pytest-randomly"
+]
+docs = []
+dev = [
+  {include-group = "typing"},
+  {include-group = "lint"},
+  {include-group = "scripts"},
+  {include-group = "test"},
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/uvbump"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.mypy]
+strict = true
+pretty = true
+show_error_codes = true
+enable_error_code = ["ignore-without-code"]
+ignore_missing_imports = true
+warn_return_any = false
+
+[tool.ruff]
+src = ["src", "test"]
+line-length = 100
+indent-width = 2
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.taskipy.tasks]
+dev = "uv run ./src/uvbump/cli.py"
+install = "uv sync"
+test = "pytest"
+lint = "ruff check ."
+format = "ruff format . && ruff check . --fix"
+typecheck = "mypy src/"
